@@ -6,8 +6,6 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Loader2, Lock, Mail } from "lucide-react";
-import { UserRole } from "@/types/auth";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 interface LoginFormProps {
   onSuccess?: () => void;
@@ -18,12 +16,11 @@ export function LoginForm({ onSuccess, onRegisterClick }: LoginFormProps) {
   const { login, isLoading } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [role, setRole] = useState<UserRole>("customer");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      await login(email, password, role);
+      await login(email, password);
       if (onSuccess) {
         onSuccess();
       }
@@ -70,23 +67,6 @@ export function LoginForm({ onSuccess, onRegisterClick }: LoginFormProps) {
                 required
               />
             </div>
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="role">Sign in as</Label>
-            <Select value={role} onValueChange={(value) => setRole(value as UserRole)}>
-              <SelectTrigger>
-                <SelectValue placeholder="Select role" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="customer">Customer</SelectItem>
-                <SelectItem value="driver">Driver</SelectItem>
-                <SelectItem value="vendor">Restaurant Owner</SelectItem>
-                <SelectItem value="admin">Admin</SelectItem>
-              </SelectContent>
-            </Select>
-            <p className="text-xs text-muted-foreground mt-1">
-              For demo: try customer@example.com, vendor@example.com, etc.
-            </p>
           </div>
           <Button type="submit" className="w-full" disabled={isLoading}>
             {isLoading ? (
