@@ -9,6 +9,7 @@ import NotFound from "./pages/NotFound";
 import { AuthPage } from "./components/auth/auth-page";
 import { DashboardLayout } from "./components/dashboard/dashboard-layout";
 import DashboardIndex from "./pages/dashboard/DashboardIndex";
+import MenuItems from "./pages/dashboard/MenuItems";
 
 const queryClient = new QueryClient();
 
@@ -32,7 +33,7 @@ const App = () => (
               <Route path="deliveries" element={<div className="min-h-[500px] flex items-center justify-center">Deliveries Page</div>} />
               <Route path="history" element={<div className="min-h-[500px] flex items-center justify-center">Delivery History Page</div>} />
               <Route path="map" element={<div className="min-h-[500px] flex items-center justify-center">Map Page</div>} />
-              <Route path="menu" element={<div className="min-h-[500px] flex items-center justify-center">Menu Management Page</div>} />
+              <Route path="menu" element={<MenuItems />} />
               <Route path="incoming" element={<div className="min-h-[500px] flex items-center justify-center">Incoming Orders Page</div>} />
               <Route path="analytics" element={<div className="min-h-[500px] flex items-center justify-center">Analytics Page</div>} />
               <Route path="users" element={<div className="min-h-[500px] flex items-center justify-center">User Management Page</div>} />
