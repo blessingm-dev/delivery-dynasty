@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -49,13 +48,26 @@ export function VendorProfileForm({ initialData, userId }: VendorProfileFormProp
       return;
     }
 
+    if (!values.business_name) {
+      toast.error("Business name is required");
+      return;
+    }
+
     setIsSubmitting(true);
     try {
       if (initialData) {
-        await updateProfile({ ...values, id: userId });
+        await updateProfile({
+          ...values,
+          id: userId,
+          business_name: values.business_name
+        } as VendorProfile);
         toast.success("Profile updated successfully");
       } else {
-        await createProfile({ ...values, id: userId });
+        await createProfile({
+          ...values,
+          id: userId,
+          business_name: values.business_name
+        } as VendorProfile);
         toast.success("Profile created successfully");
       }
     } catch (error) {
