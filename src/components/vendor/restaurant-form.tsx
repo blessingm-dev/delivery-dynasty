@@ -50,7 +50,12 @@ export function RestaurantForm({ initialData, userId }: RestaurantFormProps) {
     setIsSubmitting(true);
     try {
       const restaurantData: Restaurant = {
-        ...values,
+        name: values.name,
+        image: values.image,
+        cuisine_type: values.cuisine_type,
+        delivery_time: values.delivery_time,
+        delivery_fee: values.delivery_fee,
+        address: values.address,
         user_id: userId,
         rating: initialData?.rating || 0, // Default to 0 for new restaurants
         featured: initialData?.featured || false,
