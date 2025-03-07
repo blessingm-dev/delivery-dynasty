@@ -78,6 +78,45 @@ export type Database = {
         }
         Relationships: []
       }
+      restaurants: {
+        Row: {
+          address: string
+          cuisine_type: string
+          delivery_fee: string
+          delivery_time: string
+          featured: boolean | null
+          id: string
+          image: string
+          name: string
+          rating: number
+          user_id: string
+        }
+        Insert: {
+          address: string
+          cuisine_type: string
+          delivery_fee: string
+          delivery_time: string
+          featured?: boolean | null
+          id?: string
+          image: string
+          name: string
+          rating: number
+          user_id: string
+        }
+        Update: {
+          address?: string
+          cuisine_type?: string
+          delivery_fee?: string
+          delivery_time?: string
+          featured?: boolean | null
+          id?: string
+          image?: string
+          name?: string
+          rating?: number
+          user_id?: string
+        }
+        Relationships: []
+      }
       vendor_profiles: {
         Row: {
           address: string | null

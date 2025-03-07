@@ -6,7 +6,7 @@ import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader } from "@/compone
 import { cn } from "@/lib/utils";
 import { 
   Home, Package, ShoppingBag, Truck, Users, Settings, LogOut, 
-  ChefHat, Utensils, Map, Clock, LineChart, Bell, List
+  ChefHat, Utensils, Map, Clock, LineChart, Bell, List, Store
 } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
@@ -62,6 +62,12 @@ export function SidebarNav() {
       href: "/dashboard/map", 
       icon: Map, 
       roles: ["driver"] 
+    },
+    { 
+      title: "Restaurant Setup", 
+      href: "/dashboard/restaurant-setup", 
+      icon: Store, 
+      roles: ["vendor"] 
     },
     { 
       title: "Menu Items", 

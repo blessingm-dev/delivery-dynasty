@@ -11,6 +11,7 @@ import { DashboardLayout } from "./components/dashboard/dashboard-layout";
 import DashboardIndex from "./pages/dashboard/DashboardIndex";
 import MenuItems from "./pages/dashboard/MenuItems";
 import VendorSettings from "./pages/dashboard/VendorSettings";
+import RestaurantSetup from "./pages/dashboard/RestaurantSetup";
 
 const queryClient = new QueryClient();
 
@@ -36,6 +37,7 @@ const App = () => (
               <Route path="map" element={<div className="min-h-[500px] flex items-center justify-center">Map Page</div>} />
               <Route path="menu" element={<MenuItems />} />
               <Route path="settings" element={<VendorSettings />} />
+              <Route path="restaurant-setup" element={<RestaurantSetup />} />
               <Route path="incoming" element={<div className="min-h-[500px] flex items-center justify-center">Incoming Orders Page</div>} />
               <Route path="analytics" element={<div className="min-h-[500px] flex items-center justify-center">Analytics Page</div>} />
               <Route path="users" element={<div className="min-h-[500px] flex items-center justify-center">User Management Page</div>} />
