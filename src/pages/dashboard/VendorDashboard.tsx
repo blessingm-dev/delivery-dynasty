@@ -6,28 +6,10 @@ import { Badge } from "@/components/ui/badge";
 import { BarChart as RechartsBarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Line, LineChart as RechartsLineChart, Legend } from "recharts";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { OrdersManagement } from "@/components/orders/OrdersManagement";
 
 export default function VendorDashboard() {
   // Mock data
-  const incomingOrders = [
-    {
-      id: "ORD-1234",
-      customer: "John D.",
-      items: 3,
-      total: "$32.50",
-      time: "5 min ago",
-      status: "new"
-    },
-    {
-      id: "ORD-1235",
-      customer: "Sarah M.",
-      items: 2,
-      total: "$24.00",
-      time: "12 min ago",
-      status: "preparing"
-    }
-  ];
-  
   const popularItems = [
     {
       id: 1,
@@ -81,53 +63,11 @@ export default function VendorDashboard() {
   return (
     <div className="space-y-6 animate-fade-in">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <Card className="hover-lift">
-          <CardHeader className="pb-2">
-            <CardTitle className="text-lg flex items-center">
-              <ShoppingBag className="h-5 w-5 mr-2 text-primary" />
-              Incoming Orders
-            </CardTitle>
-            <CardDescription>Manage your new and active orders</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              {incomingOrders.map(order => (
-                <div key={order.id} className="border rounded-lg p-3">
-                  <div className="flex justify-between items-center">
-                    <span className="font-medium">Order #{order.id}</span>
-                    <Badge 
-                      variant={order.status === "new" ? "default" : "outline"}
-                    >
-                      {order.status}
-                    </Badge>
-                  </div>
-                  <div className="flex justify-between items-center mt-2">
-                    <div className="flex items-center">
-                      <Avatar className="h-6 w-6 mr-2">
-                        <AvatarFallback>{order.customer[0]}</AvatarFallback>
-                      </Avatar>
-                      <span className="text-sm">{order.customer}</span>
-                    </div>
-                    <span className="text-sm text-muted-foreground">{order.time}</span>
-                  </div>
-                  <div className="flex justify-between items-center mt-2">
-                    <span className="text-sm text-muted-foreground">{order.items} items</span>
-                    <span className="font-medium">{order.total}</span>
-                  </div>
-                  <div className="flex space-x-2 mt-3">
-                    <Button size="sm" variant="outline" className="flex-1">Details</Button>
-                    <Button size="sm" className="flex-1">Accept</Button>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </CardContent>
-          <CardFooter className="border-t pt-4">
-            <Button variant="ghost" className="w-full">View All Orders</Button>
-          </CardFooter>
-        </Card>
+        <div className="col-span-1">
+          <OrdersManagement />
+        </div>
         
-        <Card className="hover-lift">
+        <Card className="hover-lift md:col-span-1">
           <CardHeader className="pb-2">
             <CardTitle className="text-lg flex items-center">
               <ChefHat className="h-5 w-5 mr-2 text-primary" />
@@ -162,7 +102,7 @@ export default function VendorDashboard() {
           </CardFooter>
         </Card>
         
-        <Card className="hover-lift">
+        <Card className="hover-lift md:col-span-1">
           <CardHeader className="pb-2">
             <CardTitle className="text-lg flex items-center">
               <BarChart className="h-5 w-5 mr-2 text-primary" />
