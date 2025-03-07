@@ -8,6 +8,7 @@ export interface MenuItem {
   category: string | null;
   is_available: boolean;
   created_at: string;
+  restaurant_id: string | null;
 }
 
 export type MenuItemFormData = Omit<MenuItem, 'id' | 'created_at'>;

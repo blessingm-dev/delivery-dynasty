@@ -3,17 +3,22 @@ import { useState } from "react";
 import { useAuth } from "@/context/auth-context";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Plus } from "lucide-react";
+import { Plus, Store } from "lucide-react";
 import { MenuItemForm } from "@/components/menu/menu-item-form";
 import { MenuItemsTable } from "@/components/menu/menu-items-table";
 import { MenuItemsEmpty } from "@/components/menu/menu-items-empty";
 import { useMenuItems } from "@/hooks/use-menu-items";
 import { MenuItem, MenuItemFormData } from "@/types/menu-item";
+import { useRestaurant } from "@/hooks/use-restaurant";
+import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 
 export default function MenuItems() {
   const { user } = useAuth();
+  const navigate = useNavigate();
   const [isAddingItem, setIsAddingItem] = useState(false);
   const [editingItem, setEditingItem] = useState<MenuItem | null>(null);
+  const { restaurant, isLoading: isLoadingRestaurant } = useRestaurant(user?.id);
 
   const {
     menuItems,
@@ -33,7 +38,8 @@ export default function MenuItems() {
     price: 0,
     image_url: "",
     category: "",
-    is_available: true
+    is_available: true,
+    restaurant_id: restaurant?.id || null
   };
 
   const handleSubmit = (formData: MenuItemFormData) => {
@@ -63,6 +69,33 @@ export default function MenuItems() {
     return (
       <div className="flex items-center justify-center min-h-[500px]">
         <p className="text-muted-foreground">Only vendors can access this page.</p>
+      </div>
+    );
+  }
+
+  if (isLoadingRestaurant) {
+    return (
+      <div className="flex items-center justify-center min-h-[500px]">
+        <p className="text-muted-foreground">Loading restaurant information...</p>
+      </div>
+    );
+  }
+
+  if (!restaurant) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[500px] space-y-4">
+        <Store className="h-12 w-12 text-muted-foreground" />
+        <p className="text-muted-foreground text-center">
+          You need to set up your restaurant before adding menu items.
+        </p>
+        <Button 
+          onClick={() => {
+            navigate('/dashboard/restaurant-setup');
+            toast.info("Please set up your restaurant first");
+          }}
+        >
+          Set Up Restaurant
+        </Button>
       </div>
     );
   }

@@ -4,32 +4,44 @@ import { supabase } from "@/integrations/supabase/client";
 import { MenuItem, MenuItemFormData } from "@/types/menu-item";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
+import { useRestaurant } from "./use-restaurant";
 
 export function useMenuItems() {
   const { user } = useAuth();
   const queryClient = useQueryClient();
+  const { restaurant } = useRestaurant(user?.id);
 
   const menuItemsQuery = useQuery({
-    queryKey: ['menuItems'],
+    queryKey: ['menuItems', restaurant?.id],
     queryFn: async () => {
+      if (!restaurant?.id) return [];
+      
       const { data, error } = await supabase
         .from('menu_items')
         .select('*')
-        .eq('vendor_id', user?.id)
+        .eq('restaurant_id', restaurant.id)
         .order('created_at', { ascending: false });
       
       if (error) throw error;
       return data as MenuItem[];
     },
-    enabled: !!user?.id
+    enabled: !!restaurant?.id
   });
 
   const addMenuItemMutation = useMutation({
     mutationFn: async (newItem: MenuItemFormData) => {
+      if (!restaurant?.id) {
+        throw new Error("No restaurant found");
+      }
+      
       const { data, error } = await supabase
         .from('menu_items')
         .insert([
-          { ...newItem, vendor_id: user?.id }
+          { 
+            ...newItem, 
+            vendor_id: user?.id,
+            restaurant_id: restaurant.id
+          }
         ])
         .select()
         .single();
@@ -39,7 +51,7 @@ export function useMenuItems() {
     },
     onSuccess: () => {
       toast.success("Menu item added successfully");
-      queryClient.invalidateQueries({ queryKey: ['menuItems'] });
+      queryClient.invalidateQueries({ queryKey: ['menuItems', restaurant?.id] });
     },
     onError: (error) => {
       console.error("Error adding menu item:", error);
@@ -61,7 +73,7 @@ export function useMenuItems() {
     },
     onSuccess: () => {
       toast.success("Menu item updated successfully");
-      queryClient.invalidateQueries({ queryKey: ['menuItems'] });
+      queryClient.invalidateQueries({ queryKey: ['menuItems', restaurant?.id] });
     },
     onError: (error) => {
       console.error("Error updating menu item:", error);
@@ -81,7 +93,7 @@ export function useMenuItems() {
     },
     onSuccess: () => {
       toast.success("Menu item deleted successfully");
-      queryClient.invalidateQueries({ queryKey: ['menuItems'] });
+      queryClient.invalidateQueries({ queryKey: ['menuItems', restaurant?.id] });
     },
     onError: (error) => {
       console.error("Error deleting menu item:", error);
@@ -103,7 +115,7 @@ export function useMenuItems() {
     },
     onSuccess: (data) => {
       toast.success(`Item ${data.is_available ? 'available' : 'unavailable'}`);
-      queryClient.invalidateQueries({ queryKey: ['menuItems'] });
+      queryClient.invalidateQueries({ queryKey: ['menuItems', restaurant?.id] });
     },
     onError: (error) => {
       console.error("Error updating availability:", error);

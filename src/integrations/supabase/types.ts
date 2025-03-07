@@ -19,6 +19,7 @@ export type Database = {
           is_available: boolean
           name: string
           price: number
+          restaurant_id: string | null
           updated_at: string
           vendor_id: string
         }
@@ -31,6 +32,7 @@ export type Database = {
           is_available?: boolean
           name: string
           price: number
+          restaurant_id?: string | null
           updated_at?: string
           vendor_id: string
         }
@@ -43,10 +45,19 @@ export type Database = {
           is_available?: boolean
           name?: string
           price?: number
+          restaurant_id?: string | null
           updated_at?: string
           vendor_id?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "menu_items_restaurant_id_fkey"
+            columns: ["restaurant_id"]
+            isOneToOne: false
+            referencedRelation: "restaurants"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       profiles: {
         Row: {
