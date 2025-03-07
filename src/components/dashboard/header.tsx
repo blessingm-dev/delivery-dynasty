@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useAuth } from "@/context/auth-context";
 import { Badge } from "@/components/ui/badge";
+import { ThemeToggle } from "@/components/theme/theme-toggle";
 
 export function DashboardHeader() {
   const { user } = useAuth();
@@ -27,6 +28,8 @@ export function DashboardHeader() {
             placeholder="Search..." 
           />
         </div>
+        
+        <ThemeToggle />
         
         <Button variant="ghost" size="icon" className="relative">
           <Bell className="h-5 w-5" />

@@ -59,6 +59,41 @@ export type Database = {
           },
         ]
       }
+      order_items: {
+        Row: {
+          id: string
+          menu_item_id: string
+          name: string
+          order_id: string
+          quantity: number
+          unit_price: number
+        }
+        Insert: {
+          id?: string
+          menu_item_id: string
+          name: string
+          order_id: string
+          quantity: number
+          unit_price: number
+        }
+        Update: {
+          id?: string
+          menu_item_id?: string
+          name?: string
+          order_id?: string
+          quantity?: number
+          unit_price?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "order_items_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "orders"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       orders: {
         Row: {
           created_at: string | null
