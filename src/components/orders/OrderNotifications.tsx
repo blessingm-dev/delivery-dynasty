@@ -14,6 +14,8 @@ export function OrderNotifications() {
   useEffect(() => {
     // Only set up the listener if we have a restaurant
     if (!restaurant?.id) return;
+    
+    console.log("Setting up order notifications for restaurant:", restaurant.id);
 
     // Set up a channel to listen for new orders for this restaurant
     const channel = supabase
@@ -28,6 +30,7 @@ export function OrderNotifications() {
         },
         (payload) => {
           const newOrder = payload.new as Order;
+          console.log("New order received:", newOrder);
           
           // Show a toast notification for the new order
           toast.message("New Order Received!", {
@@ -47,6 +50,7 @@ export function OrderNotifications() {
 
     // Clean up the subscription when the component unmounts
     return () => {
+      console.log("Cleaning up order notifications");
       supabase.removeChannel(channel);
     };
   }, [restaurant?.id]);
