@@ -30,8 +30,7 @@ export function OrderNotifications() {
           const newOrder = payload.new as Order;
           
           // Show a toast notification for the new order
-          toast({
-            title: "New Order Received!",
+          toast.message("New Order Received!", {
             description: `Order #${newOrder.id.slice(0, 8)} - R${newOrder.total_amount.toFixed(2)}`,
             icon: <ShoppingBag className="h-5 w-5" />,
             action: {
