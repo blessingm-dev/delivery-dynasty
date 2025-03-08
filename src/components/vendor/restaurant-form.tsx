@@ -160,7 +160,7 @@ export function RestaurantForm({ initialData, userId }: RestaurantFormProps) {
                   <FormItem>
                     <FormLabel>Delivery Fee*</FormLabel>
                     <FormControl>
-                      <Input placeholder="$2.99" {...field} />
+                      <Input placeholder="R25.00" {...field} />
                     </FormControl>
                     <FormDescription>
                       Standard delivery fee.

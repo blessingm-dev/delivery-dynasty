@@ -102,7 +102,7 @@ export function OrdersManagement() {
                 <span className="text-sm">
                   {order.first_name} {order.last_name}
                 </span>
-                <span className="font-medium">${order.total_amount.toFixed(2)}</span>
+                <span className="font-medium">R{order.total_amount.toFixed(2)}</span>
               </div>
               
               <div className="flex mt-3 space-x-2">

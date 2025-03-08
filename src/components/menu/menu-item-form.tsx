@@ -6,7 +6,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
-import { Utensils, DollarSign, Image, FileText, Tag } from "lucide-react";
+import { Utensils, BanknoteIcon, Image, FileText, Tag } from "lucide-react";
 import { MenuItemFormData, MENU_CATEGORIES } from "@/types/menu-item";
 
 interface MenuItemFormProps {
@@ -60,7 +60,7 @@ export function MenuItemForm({ initialData, onSubmit, onCancel, isSubmitting }: 
         </div>
         <div className="space-y-2">
           <Label htmlFor="price" className="flex items-center gap-2">
-            <DollarSign className="h-4 w-4" /> Price *
+            <BanknoteIcon className="h-4 w-4" /> Price (R) *
           </Label>
           <Input
             id="price"

@@ -47,7 +47,7 @@ export function MenuItemsTable({
             <div className="hidden md:block md:col-span-3 text-muted-foreground">
               {item.category || "Uncategorized"}
             </div>
-            <div className="col-span-2">${parseFloat(item.price.toString()).toFixed(2)}</div>
+            <div className="col-span-2">R{parseFloat(item.price.toString()).toFixed(2)}</div>
             <div className="col-span-2">
               <Badge variant={item.is_available ? "default" : "outline"}>
                 {item.is_available ? "Available" : "Unavailable"}

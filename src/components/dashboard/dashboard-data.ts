@@ -23,21 +23,21 @@ export const popularItems: PopularItem[] = [
   {
     id: 1,
     name: "Chicken Burger",
-    price: "$8.99",
+    price: "R149.99",
     orders: 48,
     image: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=80&h=80&auto=format&fit=crop"
   },
   {
     id: 2,
     name: "Veggie Pizza",
-    price: "$12.99",
+    price: "R199.99",
     orders: 36,
     image: "https://images.unsplash.com/photo-1513104890138-7c749659a591?w=80&h=80&auto=format&fit=crop"
   },
   {
     id: 3,
     name: "French Fries",
-    price: "$3.99",
+    price: "R59.99",
     orders: 52,
     image: "https://images.unsplash.com/photo-1576107232684-1279f390859f?w=80&h=80&auto=format&fit=crop"
   },

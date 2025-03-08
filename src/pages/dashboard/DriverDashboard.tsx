@@ -1,6 +1,6 @@
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Clock, DollarSign, MapPin, ShoppingBag } from "lucide-react";
+import { Clock, BanknoteIcon, MapPin, ShoppingBag } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Badge } from "@/components/ui/badge";
@@ -17,7 +17,7 @@ export default function DriverDashboard() {
     pickupAddress: "123 Main St",
     deliveryAddress: "456 Oak St",
     distance: "3.2 miles",
-    earnings: "$8.50",
+    earnings: "R145.00",
     status: "on the way",
     estimatedTime: "15 min"
   };
@@ -27,22 +27,22 @@ export default function DriverDashboard() {
       id: "DEL-1235",
       restaurant: "Pizza Heaven",
       distance: "1.8 miles",
-      earnings: "$7.25",
+      earnings: "R120.00",
       pickupTime: "In 30 min",
     },
     {
       id: "DEL-1236",
       restaurant: "Thai Spice",
       distance: "2.5 miles",
-      earnings: "$8.75",
+      earnings: "R135.00",
       pickupTime: "In 45 min",
     }
   ];
   
   const earningsSummary = {
-    today: "$45.75",
-    week: "$320.50",
-    month: "$1,245.00",
+    today: "R750.00",
+    week: "R5,200.00",
+    month: "R20,500.00",
     deliveries: 16
   };
 
@@ -177,7 +177,7 @@ export default function DriverDashboard() {
       <Card className="hover-lift">
         <CardHeader>
           <CardTitle className="flex items-center">
-            <DollarSign className="h-5 w-5 mr-2 text-primary" />
+            <BanknoteIcon className="h-5 w-5 mr-2 text-primary" />
             Earnings Summary
           </CardTitle>
         </CardHeader>
