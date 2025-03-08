@@ -23,7 +23,7 @@ const App = () => (
       <ThemeProvider>
         <TooltipProvider>
           <Toaster />
-          <Sonner />
+          <Sonner position="top-right" closeButton theme="light" />
           <BrowserRouter>
             <Routes>
               {/* Auth Routes */}

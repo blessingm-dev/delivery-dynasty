@@ -4,6 +4,7 @@ import { useAuth } from "@/context/auth-context";
 import { SidebarNav } from "./sidebar-nav";
 import { DashboardHeader } from "./header";
 import { SidebarProvider } from "@/components/ui/sidebar";
+import { OrderNotifications } from "@/components/orders/OrderNotifications";
 
 export function DashboardLayout() {
   const { user, isLoading } = useAuth();
@@ -29,6 +30,8 @@ export function DashboardLayout() {
           </main>
         </div>
       </div>
+      {/* Only show order notifications for vendors */}
+      {user.role === 'vendor' && <OrderNotifications />}
     </SidebarProvider>
   );
 }
