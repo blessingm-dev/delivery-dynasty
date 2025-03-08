@@ -76,8 +76,8 @@ export function SidebarNav() {
       roles: ["vendor"] 
     },
     { 
-      title: "Incoming Orders", 
-      href: "/dashboard/incoming", 
+      title: "Orders", 
+      href: "/dashboard/orders", 
       icon: ShoppingBag, 
       roles: ["vendor"] 
     },

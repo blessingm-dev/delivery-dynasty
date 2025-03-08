@@ -1,12 +1,10 @@
 
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { BarChart, Bell, ChefHat, Clock, DollarSign, LineChart, ShoppingBag, Utensils } from "lucide-react";
+import { ChefHat, DollarSign, LineChart } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { BarChart as RechartsBarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Line, LineChart as RechartsLineChart, Legend } from "recharts";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { OrdersManagement } from "@/components/orders/OrdersManagement";
 
 export default function VendorDashboard() {
   // Mock data
@@ -34,13 +32,6 @@ export default function VendorDashboard() {
     },
   ];
   
-  const orderStats = {
-    today: 24,
-    yesterday: 18,
-    week: 125,
-    avgPreparationTime: "18 min"
-  };
-  
   const salesData = [
     { name: "Mon", sales: 1200 },
     { name: "Tue", sales: 1800 },
@@ -62,12 +53,8 @@ export default function VendorDashboard() {
 
   return (
     <div className="space-y-6 animate-fade-in">
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="col-span-1">
-          <OrdersManagement />
-        </div>
-        
-        <Card className="hover-lift md:col-span-1">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <Card className="hover-lift">
           <CardHeader className="pb-2">
             <CardTitle className="text-lg flex items-center">
               <ChefHat className="h-5 w-5 mr-2 text-primary" />
@@ -102,38 +89,16 @@ export default function VendorDashboard() {
           </CardFooter>
         </Card>
         
-        <Card className="hover-lift md:col-span-1">
+        <Card className="hover-lift">
           <CardHeader className="pb-2">
             <CardTitle className="text-lg flex items-center">
-              <BarChart className="h-5 w-5 mr-2 text-primary" />
-              Order Statistics
+              <DollarSign className="h-5 w-5 mr-2 text-primary" />
+              Sales Overview
             </CardTitle>
-            <CardDescription>Overview of your restaurant activity</CardDescription>
+            <CardDescription>Weekly sales performance</CardDescription>
           </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-2 gap-4">
-              <div className="bg-muted rounded-lg p-3 text-center">
-                <p className="text-xs text-muted-foreground">Today</p>
-                <p className="text-2xl font-semibold">{orderStats.today}</p>
-                <p className="text-xs text-muted-foreground">orders</p>
-              </div>
-              <div className="bg-muted rounded-lg p-3 text-center">
-                <p className="text-xs text-muted-foreground">Yesterday</p>
-                <p className="text-2xl font-semibold">{orderStats.yesterday}</p>
-                <p className="text-xs text-muted-foreground">orders</p>
-              </div>
-              <div className="bg-muted rounded-lg p-3 text-center">
-                <p className="text-xs text-muted-foreground">This Week</p>
-                <p className="text-2xl font-semibold">{orderStats.week}</p>
-                <p className="text-xs text-muted-foreground">orders</p>
-              </div>
-              <div className="bg-muted rounded-lg p-3 text-center">
-                <p className="text-xs text-muted-foreground">Avg. Prep Time</p>
-                <p className="text-2xl font-semibold">{orderStats.avgPreparationTime}</p>
-              </div>
-            </div>
-            
-            <div className="mt-4 h-[140px]">
+          <CardContent>            
+            <div className="h-[200px]">
               <ResponsiveContainer width="100%" height="100%">
                 <RechartsBarChart data={salesData}>
                   <CartesianGrid strokeDasharray="3 3" vertical={false} />

@@ -13,6 +13,7 @@ import DashboardIndex from "./pages/dashboard/DashboardIndex";
 import MenuItems from "./pages/dashboard/MenuItems";
 import VendorSettings from "./pages/dashboard/VendorSettings";
 import RestaurantSetup from "./pages/dashboard/RestaurantSetup";
+import OrdersPage from "./pages/dashboard/OrdersPage";
 
 const queryClient = new QueryClient();
 
@@ -32,7 +33,7 @@ const App = () => (
               <Route path="/dashboard" element={<DashboardLayout />}>
                 <Route index element={<DashboardIndex />} />
                 {/* Add more dashboard routes here */}
-                <Route path="orders" element={<div className="min-h-[500px] flex items-center justify-center">Orders Page</div>} />
+                <Route path="orders" element={<OrdersPage />} />
                 <Route path="restaurants" element={<div className="min-h-[500px] flex items-center justify-center">Restaurants Page</div>} />
                 <Route path="deliveries" element={<div className="min-h-[500px] flex items-center justify-center">Deliveries Page</div>} />
                 <Route path="history" element={<div className="min-h-[500px] flex items-center justify-center">Delivery History Page</div>} />
@@ -40,7 +41,6 @@ const App = () => (
                 <Route path="menu" element={<MenuItems />} />
                 <Route path="settings" element={<VendorSettings />} />
                 <Route path="restaurant-setup" element={<RestaurantSetup />} />
-                <Route path="incoming" element={<div className="min-h-[500px] flex items-center justify-center">Incoming Orders Page</div>} />
                 <Route path="analytics" element={<div className="min-h-[500px] flex items-center justify-center">Analytics Page</div>} />
                 <Route path="users" element={<div className="min-h-[500px] flex items-center justify-center">User Management Page</div>} />
                 <Route path="manage-restaurants" element={<div className="min-h-[500px] flex items-center justify-center">Restaurant Management Page</div>} />
