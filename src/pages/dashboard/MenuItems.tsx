@@ -42,12 +42,12 @@ export default function MenuItems() {
     restaurant_id: restaurant?.id || null
   };
 
-  const handleSubmit = (formData: MenuItemFormData) => {
+  const handleSubmit = (formData: MenuItemFormData, imageFile?: File) => {
     if (editingItem) {
-      updateMenuItem({ id: editingItem.id, data: formData });
+      updateMenuItem({ id: editingItem.id, data: formData, imageFile });
       setEditingItem(null);
     } else {
-      addMenuItem(formData);
+      addMenuItem({ data: formData, imageFile });
       setIsAddingItem(false);
     }
   };

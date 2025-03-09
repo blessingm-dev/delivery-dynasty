@@ -1,27 +1,30 @@
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
-import { Utensils, BanknoteIcon, Image, FileText, Tag } from "lucide-react";
+import { Utensils, BanknoteIcon, Image, FileText, Tag, Upload, X } from "lucide-react";
 import { MenuItemFormData, MENU_CATEGORIES } from "@/types/menu-item";
 
 interface MenuItemFormProps {
   initialData: MenuItemFormData;
-  onSubmit: (data: MenuItemFormData) => void;
+  onSubmit: (data: MenuItemFormData, imageFile?: File) => void;
   onCancel: () => void;
   isSubmitting: boolean;
 }
 
 export function MenuItemForm({ initialData, onSubmit, onCancel, isSubmitting }: MenuItemFormProps) {
   const [formData, setFormData] = useState<MenuItemFormData>(initialData);
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(initialData.image_url);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onSubmit(formData);
+    onSubmit(formData, imageFile || undefined);
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -40,6 +43,32 @@ export function MenuItemForm({ initialData, onSubmit, onCancel, isSubmitting }: 
 
   const handleCategoryChange = (value: string) => {
     setFormData(prev => ({ ...prev, category: value }));
+  };
+
+  const handleImageClick = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    // Create a preview URL
+    const fileUrl = URL.createObjectURL(file);
+    setPreviewUrl(fileUrl);
+    setImageFile(file);
+    
+    // Clear the image_url from formData since we'll use the uploaded file
+    setFormData(prev => ({ ...prev, image_url: null }));
+  };
+
+  const handleRemoveImage = () => {
+    setPreviewUrl(null);
+    setImageFile(null);
+    setFormData(prev => ({ ...prev, image_url: null }));
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
   };
 
   return (
@@ -91,18 +120,51 @@ export function MenuItemForm({ initialData, onSubmit, onCancel, isSubmitting }: 
             </SelectContent>
           </Select>
         </div>
+        
         <div className="space-y-2">
-          <Label htmlFor="image_url" className="flex items-center gap-2">
-            <Image className="h-4 w-4" /> Image URL
+          <Label className="flex items-center gap-2">
+            <Image className="h-4 w-4" /> Item Image
           </Label>
-          <Input
-            id="image_url"
-            name="image_url"
-            value={formData.image_url || ""}
-            onChange={handleInputChange}
-            placeholder="https://example.com/image.jpg"
-          />
+          <div className="flex flex-col items-center">
+            <input
+              type="file"
+              ref={fileInputRef}
+              onChange={handleImageChange}
+              accept="image/*"
+              className="hidden"
+            />
+            
+            {previewUrl ? (
+              <div className="relative w-full">
+                <img 
+                  src={previewUrl} 
+                  alt="Menu item preview" 
+                  className="h-[120px] w-full object-cover rounded-md border border-input"
+                />
+                <Button 
+                  type="button" 
+                  variant="destructive" 
+                  size="icon" 
+                  className="absolute top-2 right-2 h-6 w-6"
+                  onClick={handleRemoveImage}
+                >
+                  <X className="h-4 w-4" />
+                </Button>
+              </div>
+            ) : (
+              <Button 
+                type="button" 
+                variant="outline" 
+                className="w-full h-[120px] border-dashed flex flex-col gap-2"
+                onClick={handleImageClick}
+              >
+                <Upload className="h-6 w-6" />
+                <span>Upload Image</span>
+              </Button>
+            )}
+          </div>
         </div>
+        
         <div className="space-y-2 md:col-span-2">
           <Label htmlFor="description" className="flex items-center gap-2">
             <FileText className="h-4 w-4" /> Description
