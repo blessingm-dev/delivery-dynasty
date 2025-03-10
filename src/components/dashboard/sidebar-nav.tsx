@@ -1,4 +1,3 @@
-
 import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "@/context/auth-context";
 import { Button } from "@/components/ui/button";
@@ -62,12 +61,6 @@ export function SidebarNav() {
       href: "/dashboard/map", 
       icon: Map, 
       roles: ["driver"] 
-    },
-    { 
-      title: "Restaurant Setup", 
-      href: "/dashboard/restaurant-setup", 
-      icon: Store, 
-      roles: ["vendor"] 
     },
     { 
       title: "Menu Items", 
