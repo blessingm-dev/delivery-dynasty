@@ -13,6 +13,7 @@ import DashboardIndex from "./pages/dashboard/DashboardIndex";
 import MenuItems from "./pages/dashboard/MenuItems";
 import VendorSettings from "./pages/dashboard/VendorSettings";
 import OrdersPage from "./pages/dashboard/OrdersPage";
+import UsersPage from "./pages/dashboard/UsersPage";
 
 const queryClient = new QueryClient();
 
@@ -42,7 +43,7 @@ const App = () => (
                 {/* Restaurant-setup route redirects to settings */}
                 <Route path="restaurant-setup" element={<VendorSettings />} />
                 <Route path="analytics" element={<div className="min-h-[500px] flex items-center justify-center">Analytics Page</div>} />
-                <Route path="users" element={<div className="min-h-[500px] flex items-center justify-center">User Management Page</div>} />
+                <Route path="users" element={<UsersPage />} />
                 <Route path="manage-restaurants" element={<div className="min-h-[500px] flex items-center justify-center">Restaurant Management Page</div>} />
                 <Route path="manage-drivers" element={<div className="min-h-[500px] flex items-center justify-center">Driver Management Page</div>} />
               </Route>
