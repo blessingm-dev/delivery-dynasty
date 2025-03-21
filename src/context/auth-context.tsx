@@ -154,7 +154,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           clearSession();
           setUser(null);
         } else if (profile) {
-          console.log("Profile found, setting user state");
+          console.log("Profile found, setting user state with role:", profile.role);
           // Create user object from profile
           const userData: User = {
             id: profile.id,
@@ -172,6 +172,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           });
           
           setUser(userData);
+        } else {
+          console.error("No profile found for user");
+          clearSession();
+          setUser(null);
         }
       } catch (error) {
         console.error("Authentication initialization error:", error);
