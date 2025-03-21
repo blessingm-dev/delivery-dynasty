@@ -4,6 +4,13 @@ import { User, UserRole } from "@/types/auth";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 
+// Define a session type to store in localStorage
+interface AuthSession {
+  user: User | null;
+  accessToken: string | null;
+  expiresAt: number | null;
+}
+
 interface AuthContextType {
   user: User | null;
   isLoading: boolean;
@@ -14,33 +21,68 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
+const SESSION_KEY = 'foodconnect_session';
+
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
-  // Initialize auth state from Supabase session
+  // Helper functions for localStorage
+  const saveSession = (session: AuthSession) => {
+    localStorage.setItem(SESSION_KEY, JSON.stringify(session));
+  };
+
+  const getSession = (): AuthSession | null => {
+    const sessionStr = localStorage.getItem(SESSION_KEY);
+    if (!sessionStr) return null;
+    
+    try {
+      return JSON.parse(sessionStr) as AuthSession;
+    } catch (e) {
+      console.error("Error parsing session from localStorage:", e);
+      return null;
+    }
+  };
+
+  const clearSession = () => {
+    localStorage.removeItem(SESSION_KEY);
+  };
+
+  // Initialize auth state from localStorage and sync with Supabase
   useEffect(() => {
     const initializeAuth = async () => {
       setIsLoading(true);
       
       try {
-        // Check if there's an active session
+        // First check local storage for a session
+        const localSession = getSession();
+        
+        // If we have a valid, non-expired local session, use it
+        if (localSession && localSession.user && localSession.expiresAt && localSession.expiresAt > Date.now()) {
+          setUser(localSession.user);
+          setIsLoading(false);
+          return;
+        }
+        
+        // If no valid local session, check Supabase for an active session
         const { data: { session }, error: sessionError } = await supabase.auth.getSession();
         
         if (sessionError) {
           console.error("Error fetching session:", sessionError);
+          clearSession();
           setIsLoading(false);
           return;
         }
         
         if (!session) {
-          // No active session
+          // No active session in Supabase either
+          clearSession();
           setUser(null);
           setIsLoading(false);
           return;
         }
         
-        // Fetch user profile data from our profiles table
+        // We have a Supabase session, fetch user profile data
         const { data: profile, error: profileError } = await supabase
           .from('profiles')
           .select('*')
@@ -49,21 +91,33 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         
         if (profileError) {
           console.error("Error fetching profile:", profileError);
-          // If there's an error fetching the profile, try to sign out to clear any bad state
+          // If there's an error fetching the profile, clear everything
           await supabase.auth.signOut();
+          clearSession();
           setUser(null);
         } else if (profile) {
-          setUser({
+          // Create user object from profile
+          const userData: User = {
             id: profile.id,
             email: profile.email,
             name: profile.name,
             role: profile.role as UserRole,
             avatar: profile.avatar
+          };
+          
+          // Save to localStorage
+          saveSession({
+            user: userData,
+            accessToken: session.access_token,
+            expiresAt: new Date(session.expires_at || 0).getTime()
           });
+          
+          setUser(userData);
         }
       } catch (error) {
         console.error("Authentication initialization error:", error);
         // Reset the user state if there's an error
+        clearSession();
         setUser(null);
       } finally {
         // Always set loading to false to avoid getting stuck
@@ -73,7 +127,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     initializeAuth();
 
-    // Set up auth state change listener
+    // Set up auth state change listener from Supabase
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
         console.log("Auth state changed:", event);
@@ -90,23 +144,35 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             
             if (error) {
               console.error("Error fetching profile:", error);
+              clearSession();
               setUser(null);
             } else if (profile) {
-              setUser({
+              const userData: User = {
                 id: profile.id,
                 email: profile.email,
                 name: profile.name,
                 role: profile.role as UserRole,
                 avatar: profile.avatar
+              };
+              
+              // Save to localStorage
+              saveSession({
+                user: userData,
+                accessToken: session.access_token,
+                expiresAt: new Date(session.expires_at || 0).getTime()
               });
+              
+              setUser(userData);
             }
           } catch (error) {
             console.error("Error during auth state change:", error);
+            clearSession();
             setUser(null);
           } finally {
             setIsLoading(false);
           }
         } else if (event === 'SIGNED_OUT') {
+          clearSession();
           setUser(null);
           setIsLoading(false);
         }
@@ -132,6 +198,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         throw error;
       }
       
+      // The session will be updated by the onAuthStateChange listener
       toast.success("Logged in successfully!");
     } catch (error: any) {
       console.error("Login error:", error);
@@ -162,6 +229,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         throw error;
       }
       
+      // The session will be updated by the onAuthStateChange listener
       toast.success("Account created successfully!");
     } catch (error: any) {
       console.error("Registration error:", error);
@@ -174,7 +242,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const logout = async () => {
     try {
+      // Sign out from Supabase
       await supabase.auth.signOut();
+      // Clear local storage
+      clearSession();
+      setUser(null);
       toast.success("Logged out successfully");
     } catch (error) {
       console.error("Logout error:", error);
