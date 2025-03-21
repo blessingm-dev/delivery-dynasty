@@ -50,84 +50,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   // Initialize auth state from localStorage and sync with Supabase
   useEffect(() => {
-    const initializeAuth = async () => {
-      setIsLoading(true);
-      
-      try {
-        // First check local storage for a session
-        const localSession = getSession();
-        
-        // If we have a valid, non-expired local session, use it
-        if (localSession && localSession.user && localSession.expiresAt && localSession.expiresAt > Date.now()) {
-          setUser(localSession.user);
-          setIsLoading(false);
-          return;
-        }
-        
-        // If no valid local session, check Supabase for an active session
-        const { data: { session }, error: sessionError } = await supabase.auth.getSession();
-        
-        if (sessionError) {
-          console.error("Error fetching session:", sessionError);
-          clearSession();
-          setIsLoading(false);
-          return;
-        }
-        
-        if (!session) {
-          // No active session in Supabase either
-          clearSession();
-          setUser(null);
-          setIsLoading(false);
-          return;
-        }
-        
-        // We have a Supabase session, fetch user profile data
-        const { data: profile, error: profileError } = await supabase
-          .from('profiles')
-          .select('*')
-          .eq('id', session.user.id)
-          .single();
-        
-        if (profileError) {
-          console.error("Error fetching profile:", profileError);
-          // If there's an error fetching the profile, clear everything
-          await supabase.auth.signOut();
-          clearSession();
-          setUser(null);
-        } else if (profile) {
-          // Create user object from profile
-          const userData: User = {
-            id: profile.id,
-            email: profile.email,
-            name: profile.name,
-            role: profile.role as UserRole,
-            avatar: profile.avatar
-          };
-          
-          // Save to localStorage
-          saveSession({
-            user: userData,
-            accessToken: session.access_token,
-            expiresAt: new Date(session.expires_at || 0).getTime()
-          });
-          
-          setUser(userData);
-        }
-      } catch (error) {
-        console.error("Authentication initialization error:", error);
-        // Reset the user state if there's an error
-        clearSession();
-        setUser(null);
-      } finally {
-        // Always set loading to false to avoid getting stuck
-        setIsLoading(false);
-      }
-    };
-
-    initializeAuth();
-
-    // Set up auth state change listener from Supabase
+    console.log("Auth provider initializing...");
+    
+    // Set up auth state listener FIRST
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
         console.log("Auth state changed:", event);
@@ -179,7 +104,91 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
     );
 
-    // Cleanup subscription
+    const initializeAuth = async () => {
+      setIsLoading(true);
+      
+      try {
+        // First check local storage for a session
+        const localSession = getSession();
+        
+        // If we have a valid, non-expired local session, use it
+        if (localSession && localSession.user && localSession.expiresAt && localSession.expiresAt > Date.now()) {
+          console.log("Using cached session from localStorage");
+          setUser(localSession.user);
+          setIsLoading(false);
+          return;
+        }
+        
+        console.log("Checking Supabase for session");
+        // If no valid local session, check Supabase for an active session
+        const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+        
+        if (sessionError) {
+          console.error("Error fetching session:", sessionError);
+          clearSession();
+          setIsLoading(false);
+          return;
+        }
+        
+        if (!session) {
+          // No active session in Supabase either
+          console.log("No active session found");
+          clearSession();
+          setUser(null);
+          setIsLoading(false);
+          return;
+        }
+        
+        console.log("Found active Supabase session, fetching profile");
+        // We have a Supabase session, fetch user profile data
+        const { data: profile, error: profileError } = await supabase
+          .from('profiles')
+          .select('*')
+          .eq('id', session.user.id)
+          .single();
+        
+        if (profileError) {
+          console.error("Error fetching profile:", profileError);
+          // If there's an error fetching the profile, clear everything
+          await supabase.auth.signOut();
+          clearSession();
+          setUser(null);
+        } else if (profile) {
+          console.log("Profile found, setting user state");
+          // Create user object from profile
+          const userData: User = {
+            id: profile.id,
+            email: profile.email,
+            name: profile.name,
+            role: profile.role as UserRole,
+            avatar: profile.avatar
+          };
+          
+          // Save to localStorage
+          saveSession({
+            user: userData,
+            accessToken: session.access_token,
+            expiresAt: new Date(session.expires_at || 0).getTime()
+          });
+          
+          setUser(userData);
+        }
+      } catch (error) {
+        console.error("Authentication initialization error:", error);
+        // Reset the user state if there's an error
+        clearSession();
+        setUser(null);
+      } finally {
+        // Always set loading to false to avoid getting stuck
+        console.log("Auth initialization complete");
+        setIsLoading(false);
+      }
+    };
+
+    // Run the initialization
+    initializeAuth();
+
+    // Cleanup subscription on unmount
     return () => {
       subscription.unsubscribe();
     };
